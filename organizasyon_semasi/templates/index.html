@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ağaç Yapısı</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 20px;
+            padding: 20px;
+        }
+
+        .tree {
+            list-style-type: none;
+            padding-left: 20px;
+        }
+
+        .tree li {
+            position: relative;
+            padding: 8px 10px;
+            cursor: pointer;
+            transition: 0.3s;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            background: #fff;
+            margin: 5px 0;
+            box-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .tree li:hover {
+            background: #e3f2fd;
+        }
+
+        .nested {
+            display: none;
+            margin-left: 20px;
+            padding-left: 10px;
+            border-left: 2px solid #1976D2;
+        }
+
+        .active {
+            display: block;
+        }
+
+        .toggle-icon {
+            font-weight: bold;
+            margin-right: 10px;
+            color: #1976D2;
+            font-size: 18px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Şirket Hiyerarşisi</h2>
+    <ul class="tree">
+        {% for node in tree %}
+            <li>
+                <span class="toggle-icon">+</span>
+                <span>{{ node.adi_soyadi }}</span>
+                {% if node.children %}
+                    <ul class="nested">
+                        {% for child in node.children %}
+                            <li>
+                                <span class="toggle-icon">+</span>
+                                <span>{{ child.adi_soyadi }}</span>
+                                {% if child.children %}
+                                    <ul class="nested">
+                                        {% for grandchild in child.children %}
+                                            <li><span class="toggle-icon">+</span><span>{{ grandchild.adi_soyadi }}</span></li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var toggles = document.querySelectorAll(".toggle-icon");
+
+            toggles.forEach(function(toggle) {
+                toggle.addEventListener("click", function(event) {
+                    var parent = toggle.parentElement;
+                    var children = parent.querySelector(".nested");
+
+                    if (children) {
+                        children.classList.toggle("active");
+                        toggle.textContent = children.classList.contains("active") ? "−" : "+";
+                    }
+                    event.stopPropagation();
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>
